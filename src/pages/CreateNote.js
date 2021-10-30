@@ -11,6 +11,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 const useStyles = makeStyles({
   field: {
@@ -45,7 +46,17 @@ export default function CreateNote() {
         method: 'POST',
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify({ title, details, category }),
-      }).then(() => history.push('/'));
+      }).then(() => {
+        toast.success('Note added', {
+          duration: 3000,
+          icon: '📝',
+          style: {
+            border: '1px solid green',
+            color: '#69b00b',
+          },
+        });
+        history.push('/notes');
+      });
     }
   };
 
@@ -67,7 +78,7 @@ export default function CreateNote() {
           label="Note Title"
           variant="outlined"
           color="secondary"
-          fullWidth
+          // fullWidth
           required
           error={titleError}
         />
@@ -79,7 +90,7 @@ export default function CreateNote() {
           color="secondary"
           multiline
           rows={4}
-          fullWidth
+          // fullWidth
           required
           error={detailsError}
         />

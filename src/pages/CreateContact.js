@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -45,7 +46,17 @@ export default function CreateContact() {
         method: 'POST',
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify({ name, phone, category }),
-      }).then(() => history.push('/contacts'));
+      }).then(() => {
+        toast.success('Contact added', {
+          duration: 3000,
+          icon: '🤵',
+          style: {
+            border: '1px solid green',
+            color: '#69b00b',
+          },
+        });
+        history.push('/');
+      });
     }
   };
 
@@ -67,7 +78,7 @@ export default function CreateContact() {
           label="Name"
           variant="outlined"
           color="secondary"
-          fullWidth
+          // fullWidth
           required
           error={nameError}
         />
@@ -77,7 +88,7 @@ export default function CreateContact() {
           label="Number"
           variant="outlined"
           color="secondary"
-          fullWidth
+          // fullWidth
           required
           error={phoneError}
         />

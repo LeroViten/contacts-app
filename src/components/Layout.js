@@ -1,8 +1,8 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
-import Drawer from '@material-ui/core/Drawer';
-import Typography from '@material-ui/core/Typography';
 import { useHistory, useLocation } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core';
+import Drawer from '@mui/material/Drawer';
+import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -15,7 +15,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { format } from 'date-fns';
 import Avatar from '@material-ui/core/Avatar';
 
-const drawerWidth = 240;
+const drawerWidth = 210;
 
 const useStyles = makeStyles(theme => {
   return {
@@ -60,24 +60,24 @@ export default function Layout({ children }) {
 
   const menuItems = [
     {
-      text: 'My Notes',
-      icon: <SubjectOutlined color="secondary" />,
-      path: '/',
-    },
-    {
-      text: 'Create Note',
-      icon: <AddCircleOutlineOutlined color="secondary" />,
-      path: '/create-note',
-    },
-    {
-      text: 'Contacts',
+      text: 'My Contacts',
       icon: <PermContactCalendarIcon color="primary" />,
-      path: '/contacts',
+      path: '/',
     },
     {
       text: 'Create Contact',
       icon: <AddBoxIcon color="primary" />,
       path: '/create-contact',
+    },
+    {
+      text: 'My Notes',
+      icon: <SubjectOutlined color="secondary" />,
+      path: '/notes',
+    },
+    {
+      text: 'Create Note',
+      icon: <AddCircleOutlineOutlined color="secondary" />,
+      path: '/create-note',
     },
   ];
 
@@ -92,7 +92,7 @@ export default function Layout({ children }) {
       >
         <Toolbar>
           <Typography className={classes.date}>
-            Today is the {format(new Date(), 'do MMMM Y')}
+            {format(new Date(), 'do MMMM Y')}
           </Typography>
           <Typography>SpiderBoy</Typography>
           <Avatar className={classes.avatar} src="/avatar.jpg" />
