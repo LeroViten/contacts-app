@@ -20,6 +20,7 @@
     "react-hot-toast": "^2.1.1",
     "react-loader-spinner": "^4.0.0",
     "react-masonry-css": "^1.0.14",
+    "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
     "react-toastify": "^8.0.3",

@@ -12,6 +12,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import { useCreateContactMutation } from '../redux/contacts/contactSlice';
+import Loader from 'react-loader-spinner';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 const useStyles = makeStyles({
   field: {
@@ -30,8 +33,17 @@ export default function CreateContact() {
   const [phoneError, setPhoneError] = useState(false);
   const [category, setCategory] = useState('friends');
 
+  const [createContact, { isLoading }] = useCreateContactMutation();
+
   const handleSubmit = e => {
     e.preventDefault();
+
+    const newContact = {
+      name: name,
+      phone: phone,
+      category: category,
+    };
+
     setNameError(false);
     setPhoneError(false);
 
@@ -42,21 +54,20 @@ export default function CreateContact() {
       setPhoneError(true);
     }
     if (name && phone) {
-      fetch('https://617d4f611eadc5001713647b.mockapi.io/api/v1/contacts', {
-        method: 'POST',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ name, phone, category }),
-      }).then(() => {
-        toast.success('Contact added', {
-          duration: 3000,
-          icon: '🤵',
-          style: {
-            border: '1px solid green',
-            color: '#69b00b',
-          },
-        });
-        history.push('/');
+      createContact(newContact);
+
+      e.currentTarget.reset();
+
+      toast.success('Contact added', {
+        duration: 3000,
+        icon: '🤵',
+        style: {
+          border: '1px solid green',
+          color: '#69b00b',
+        },
       });
+
+      history.push('/');
     }
   };
 
@@ -71,11 +82,12 @@ export default function CreateContact() {
         Create a New Contact
       </Typography>
 
-      <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+      <form autoComplete="off" onSubmit={handleSubmit}>
         <TextField
           className={classes.field}
-          onChange={e => setName(e.target.value)}
+          onChange={e => setName(e.currentTarget.value)}
           label="Name"
+          name="name"
           variant="outlined"
           color="secondary"
           // fullWidth
@@ -84,8 +96,9 @@ export default function CreateContact() {
         />
         <TextField
           className={classes.field}
-          onChange={e => setPhone(e.target.value)}
+          onChange={e => setPhone(e.currentTarget.value)}
           label="Number"
+          name="number"
           variant="outlined"
           color="secondary"
           // fullWidth
@@ -97,7 +110,7 @@ export default function CreateContact() {
           <FormLabel>Number Category</FormLabel>
           <RadioGroup
             value={category}
-            onChange={e => setCategory(e.target.value)}
+            onChange={e => setCategory(e.currentTarget.value)}
           >
             <FormControlLabel
               value="family"
@@ -115,10 +128,20 @@ export default function CreateContact() {
 
         <Button
           type="submit"
+          disabled={isLoading}
           color="secondary"
           variant="contained"
           endIcon={<KeyboardArrowRightIcon />}
         >
+          {isLoading && (
+            <Loader
+              className="Loader"
+              type="ThreeDots"
+              color="blue"
+              height={20}
+              width={24}
+            />
+          )}
           Save
         </Button>
       </form>

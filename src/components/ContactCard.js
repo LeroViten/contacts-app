@@ -8,6 +8,8 @@ import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import { makeStyles } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import { yellow, green, pink, blue } from '@material-ui/core/colors';
+import Loader from 'react-loader-spinner';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 const useStyles = makeStyles({
   avatar: {
@@ -26,7 +28,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ContactCard({ contact, handleDelete }) {
+export default function ContactCard({ contact, handleDelete, isDeleting }) {
   const classes = useStyles(contact);
 
   return (
@@ -39,9 +41,19 @@ export default function ContactCard({ contact, handleDelete }) {
             </Avatar>
           }
           action={
-            <IconButton onClick={() => handleDelete(contact.id)}>
-              <DeleteOutlined />
-            </IconButton>
+            isDeleting ? (
+              <Loader
+                className="Loader"
+                type="ThreeDots"
+                color="blue"
+                height={20}
+                width={24}
+              />
+            ) : (
+              <IconButton onClick={() => handleDelete(contact.id)}>
+                <DeleteOutlined />
+              </IconButton>
+            )
           }
           title={contact.name}
           subheader={contact.category}
