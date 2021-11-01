@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { useDeleteContactMutation } from '../redux/contacts/contactSlice';
+import {
+  useDeleteContactMutation,
+  useFetchContactsQuery,
+} from '../redux/contacts/contactSlice';
 import Container from '@material-ui/core/Container';
 import Masonry from 'react-masonry-css';
 import ContactCard from '../components/ContactCard';
+import Loader from 'react-loader-spinner';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 export default function Notes() {
-  const [contacts, setContacts] = useState([]);
+  const { data: contacts, isFetching } = useFetchContactsQuery();
   const [deleteContact, { isLoading: isDeleting }] = useDeleteContactMutation();
-
-  useEffect(() => {
-    fetch('https://617d4f611eadc5001713647b.mockapi.io/api/v1/contacts')
-      .then(res => res.json())
-      .then(data => setContacts(data));
-  }, []);
 
   const handleDelete = async id => {
     deleteContact(id);
-    const newContacts = contacts.filter(contact => contact.id !== id);
-    setContacts(newContacts);
   };
 
   const breakpoints = {
@@ -28,21 +24,38 @@ export default function Notes() {
 
   return (
     <Container>
-      <Masonry
-        breakpointCols={breakpoints}
-        className="my-masonry-grid"
-        columnClassName="my-masonry-grid_column"
-      >
-        {contacts.map(contact => (
-          <div key={contact.id}>
-            <ContactCard
-              contact={contact}
-              handleDelete={handleDelete}
-              isDeleting={isDeleting}
-            />
-          </div>
-        ))}
-      </Masonry>
+      {!contacts && <h1>No contacts to show</h1>}
+      {isFetching && (
+        <Loader
+          className="Loader"
+          type="Puff"
+          color="blue"
+          height={100}
+          width={100}
+        />
+      )}
+      {isDeleting && (
+        <Loader
+          className="Loader"
+          type="BallTriangle"
+          color="blue"
+          height={60}
+          width={60}
+        />
+      )}
+      {contacts && (
+        <Masonry
+          breakpointCols={breakpoints}
+          className="my-masonry-grid"
+          columnClassName="my-masonry-grid_column"
+        >
+          {contacts.map(contact => (
+            <div key={contact.id}>
+              <ContactCard contact={contact} handleDelete={handleDelete} />
+            </div>
+          ))}
+        </Masonry>
+      )}
     </Container>
   );
 }

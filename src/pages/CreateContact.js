@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { makeStyles } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
+import { useCreateContactMutation } from '../redux/contacts/contactSlice';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import { makeStyles } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
-import { useHistory } from 'react-router-dom';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-import { useCreateContactMutation } from '../redux/contacts/contactSlice';
 import Loader from 'react-loader-spinner';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
@@ -25,34 +25,46 @@ const useStyles = makeStyles({
 });
 
 export default function CreateContact() {
+  const [category, setCategory] = useState('family');
   const classes = useStyles();
   const history = useHistory();
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [nameError, setNameError] = useState(false);
-  const [phoneError, setPhoneError] = useState(false);
-  const [category, setCategory] = useState('friends');
 
   const [createContact, { isLoading }] = useCreateContactMutation();
 
   const handleSubmit = e => {
     e.preventDefault();
+    const name = e.currentTarget.name.value;
+    const phone = e.currentTarget.number.value;
+    // const category = e.currentTarget.radio.value;
 
     const newContact = {
-      name: name,
-      phone: phone,
-      category: category,
+      name,
+      phone,
+      category,
     };
 
-    setNameError(false);
-    setPhoneError(false);
-
     if (name === '') {
-      setNameError(true);
+      toast.error('Name cannot be empty!', {
+        duration: 3000,
+        icon: '🤷‍♂️',
+        style: {
+          border: '1px solid tomato',
+          color: '#b00b69',
+        },
+      });
     }
+
     if (phone === '') {
-      setPhoneError(true);
+      toast.error('Number cannot be empty!', {
+        duration: 3000,
+        icon: '🤷‍♂️',
+        style: {
+          border: '1px solid tomato',
+          color: '#b00b69',
+        },
+      });
     }
+
     if (name && phone) {
       createContact(newContact);
 
@@ -85,25 +97,32 @@ export default function CreateContact() {
       <form autoComplete="off" onSubmit={handleSubmit}>
         <TextField
           className={classes.field}
-          onChange={e => setName(e.currentTarget.value)}
           label="Name"
           name="name"
+          type="text"
           variant="outlined"
           color="secondary"
           // fullWidth
           required
-          error={nameError}
+          helperText="The name can only consist of letters, apostrophe, dash and spaces. For example: Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+          inputProps={{
+            pattern:
+              "^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$",
+          }}
         />
         <TextField
           className={classes.field}
-          onChange={e => setPhone(e.currentTarget.value)}
           label="Number"
           name="number"
+          type="number"
           variant="outlined"
           color="secondary"
           // fullWidth
           required
-          error={phoneError}
+          helperText="Phone number can consist of numbers, spaces, dashes, brackets and start with +"
+          inputProps={{
+            pattern: '[0-9]{10}',
+          }}
         />
 
         <FormControl className={classes.field}>
@@ -116,13 +135,20 @@ export default function CreateContact() {
               value="family"
               control={<Radio />}
               label="Family"
+              name="radio"
             />
             <FormControlLabel
               value="friends"
               control={<Radio />}
               label="Friends"
+              name="radio"
             />
-            <FormControlLabel value="work" control={<Radio />} label="Work" />
+            <FormControlLabel
+              value="work"
+              control={<Radio />}
+              label="Work"
+              name="radio"
+            />
           </RadioGroup>
         </FormControl>
 
