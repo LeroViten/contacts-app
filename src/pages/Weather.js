@@ -30,7 +30,6 @@ export default function Weather() {
 
   const showNotFoundError = isError && error.status === 404;
   const showPokemonData = data && !isFetching && !isError;
-  const weatherIcon = data.weather[0].icon;
 
   return (
     <Container>
@@ -85,7 +84,7 @@ export default function Weather() {
           <h1>Here's weather for {data.name}</h1>
           <img
             className="weatherIcon"
-            src={`https://openweathermap.org/img/w/${weatherIcon}.png`}
+            src={`https://openweathermap.org/img/w/${data.weather[0].icon}.png`}
             alt="weather icon"
           />
           <p>Forecast: {data.weather[0].main}</p>
