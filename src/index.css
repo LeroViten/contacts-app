@@ -43,3 +43,17 @@ input:invalid {
 .MuiPaper-rounded:hover {
   transform: scale(0.99);
 }
+
+.weatherCard {
+  width: fit-content;
+  border-radius: 4px;
+  padding: 10px 15px;
+  margin-top: 10px;
+  background-color: #d6d6d6;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.weatherIcon {
+  width: 60px;
+  height: 60px;
+}

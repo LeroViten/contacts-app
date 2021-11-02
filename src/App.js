@@ -1,12 +1,14 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { Toaster } from 'react-hot-toast';
 import { blue } from '@material-ui/core/colors';
-import Notes from './pages/Notes';
-import CreateNote from './pages/CreateNote';
-import CreateContact from './pages/CreateContact';
 import Layout from './components/Layout';
 import Contacts from './pages/Contacts';
-import { Toaster } from 'react-hot-toast';
+import CreateContact from './pages/CreateContact';
+import Notes from './pages/Notes';
+import CreateNote from './pages/CreateNote';
+import Weather from './pages/Weather';
+import NotFoundPage from './pages/NotFoundPage';
 
 const theme = createTheme({
   palette: {
@@ -41,6 +43,12 @@ function App() {
             </Route>
             <Route exact path="/create-note">
               <CreateNote />
+            </Route>
+            <Route exact path="/weather">
+              <Weather />
+            </Route>
+            <Route>
+              <NotFoundPage />
             </Route>
           </Switch>
         </Layout>

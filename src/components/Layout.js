@@ -8,6 +8,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { AddCircleOutlineOutlined, SubjectOutlined } from '@material-ui/icons/';
+import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import AppBar from '@material-ui/core/AppBar';
@@ -78,6 +79,11 @@ export default function Layout({ children }) {
       text: 'Create Note',
       icon: <AddCircleOutlineOutlined color="secondary" />,
       path: '/create-note',
+    },
+    {
+      text: 'Weather',
+      icon: <WbSunnyOutlinedIcon color="primary" />,
+      path: '/weather',
     },
   ];
 
