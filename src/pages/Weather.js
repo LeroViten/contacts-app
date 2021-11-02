@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
+import { useSpring, animated } from 'react-spring';
 import Loader from 'react-loader-spinner';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
@@ -20,6 +21,11 @@ export default function Weather() {
   const [city, setCity] = useState('');
   const { data, error, isFetching, isError } = useGetWeatherByNameQuery(city, {
     skip: city === '',
+  });
+  const animProps = useSpring({
+    to: { opacity: 1 },
+    from: { opacity: 0 },
+    delay: 1000,
   });
 
   const handleSubmit = e => {
@@ -74,13 +80,13 @@ export default function Weather() {
       </form>
 
       {showNotFoundError && (
-        <h2>
+        <animated.h2 style={animProps}>
           Whoops, no city with the <i>{city}</i> name found! 😢
-        </h2>
+        </animated.h2>
       )}
 
       {showPokemonData && (
-        <div className="weatherCard">
+        <animated.div className="weatherCard" style={animProps}>
           <h1>Here's weather for {data.name}</h1>
           <img
             className="weatherIcon"
@@ -99,7 +105,7 @@ export default function Weather() {
             Sunset:{' '}
             {new Date(data.sys.sunset * 1000).toLocaleTimeString('ru-RU')}
           </p>
-        </div>
+        </animated.div>
       )}
     </Container>
   );

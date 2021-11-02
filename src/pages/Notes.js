@@ -2,6 +2,7 @@ import {
   useDeleteNoteMutation,
   useFetchNotesQuery,
 } from '../redux/notes/noteSlice';
+import { useSpring, animated } from 'react-spring';
 import Loader from 'react-loader-spinner';
 import Container from '@material-ui/core/Container';
 import Masonry from 'react-masonry-css';
@@ -11,6 +12,11 @@ import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 export default function Notes() {
   const { data: notes, isFetching } = useFetchNotesQuery();
   const [deleteNote, { isLoading: isDeleting }] = useDeleteNoteMutation();
+  const animProps = useSpring({
+    to: { opacity: 1 },
+    from: { opacity: 0 },
+    delay: 1000,
+  });
 
   const handleDelete = async id => {
     deleteNote(id);
@@ -50,13 +56,13 @@ export default function Notes() {
           columnClassName="my-masonry-grid_column"
         >
           {notes.map(note => (
-            <div key={note.id}>
+            <animated.div key={note.id} style={animProps}>
               <NoteCard
                 note={note}
                 handleDelete={handleDelete}
                 deleting={isDeleting}
               />
-            </div>
+            </animated.div>
           ))}
         </Masonry>
       )}

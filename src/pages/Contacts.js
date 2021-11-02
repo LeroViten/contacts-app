@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core';
+import { useSpring, animated } from 'react-spring';
 import {
   useDeleteContactMutation,
   useFetchContactsQuery,
@@ -30,6 +31,11 @@ export default function Contacts() {
   const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
   const classes = useStyles();
+  const animProps = useSpring({
+    to: { opacity: 1 },
+    from: { opacity: 0 },
+    delay: 1000,
+  });
 
   useEffect(() => {
     if (data) {
@@ -91,13 +97,13 @@ export default function Contacts() {
           columnClassName="my-masonry-grid_column"
         >
           {visibleContacts.map(contact => (
-            <div key={contact.id}>
+            <animated.div key={contact.id} style={animProps}>
               <ContactCard
                 contact={contact}
                 handleDelete={handleDelete}
                 deleting={isDeleting}
               />
-            </div>
+            </animated.div>
           ))}
         </Masonry>
       )}
