@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { makeStyles } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import { useCreateContactMutation } from '../redux/contacts/contactSlice';
+import {
+  useCreateContactMutation,
+  useFetchContactsQuery,
+} from '../redux/contacts/contactSlice';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -30,12 +33,13 @@ export default function CreateContact() {
   const history = useHistory();
 
   const [createContact, { isLoading }] = useCreateContactMutation();
+  const { data: contacts } = useFetchContactsQuery();
 
   const handleSubmit = e => {
-    e.preventDefault();
     const name = e.currentTarget.name.value;
     const phone = e.currentTarget.number.value;
-    // const category = e.currentTarget.radio.value;
+
+    e.preventDefault();
 
     const newContact = {
       name,
@@ -63,6 +67,23 @@ export default function CreateContact() {
           color: '#b00b69',
         },
       });
+    }
+
+    if (
+      contacts.find(
+        contact => name.toLowerCase() === contact.name.toLowerCase()
+      )
+    ) {
+      toast.error('Contact is already in the list', {
+        duration: 3000,
+        icon: '🤷‍♂️',
+        style: {
+          border: '1px solid tomato',
+          color: '#b00b69',
+        },
+      });
+      e.currentTarget.reset();
+      return;
     }
 
     if (name && phone) {

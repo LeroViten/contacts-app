@@ -19,11 +19,13 @@ export const noteApi = createApi({
       invalidatesTags: ['Note'],
     }),
     createNote: builder.mutation({
-      query: noteContent => ({
+      query: ({ title, details, category }) => ({
         url: '/notes',
         method: 'POST',
         body: {
-          content: noteContent,
+          title,
+          details,
+          category,
         },
       }),
       invalidatesTags: ['Note'],

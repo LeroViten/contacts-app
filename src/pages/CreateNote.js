@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
+import { useCreateNoteMutation } from '../redux/notes/noteSlice';
+import { toast } from 'react-hot-toast';
+import { useHistory } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import { makeStyles } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-import { useHistory } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
+import Loader from 'react-loader-spinner';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 const useStyles = makeStyles({
   field: {
@@ -22,41 +25,58 @@ const useStyles = makeStyles({
 });
 
 export default function CreateNote() {
+  const [category, setCategory] = useState('money');
   const classes = useStyles();
   const history = useHistory();
-  const [title, setTitle] = useState('');
-  const [details, setDetails] = useState('');
-  const [titleError, setTitleError] = useState(false);
-  const [detailsError, setDetailsError] = useState(false);
-  const [category, setCategory] = useState('money');
+  const [createNote, { isLoading }] = useCreateNoteMutation();
 
   const handleSubmit = e => {
+    const title = e.currentTarget.title.value;
+    const details = e.currentTarget.details.value;
+
     e.preventDefault();
-    setTitleError(false);
-    setDetailsError(false);
+
+    const newNote = {
+      title,
+      details,
+      category,
+    };
 
     if (title === '') {
-      setTitleError(true);
-    }
-    if (details === '') {
-      setDetailsError(true);
-    }
-    if (title && details) {
-      fetch('https://617d4f611eadc5001713647b.mockapi.io/api/v1/notes', {
-        method: 'POST',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ title, details, category }),
-      }).then(() => {
-        toast.success('Note added', {
-          duration: 3000,
-          icon: '📝',
-          style: {
-            border: '1px solid green',
-            color: '#69b00b',
-          },
-        });
-        history.push('/notes');
+      toast.error('Title cannot be empty!', {
+        duration: 3000,
+        icon: '🤷‍♂️',
+        style: {
+          border: '1px solid tomato',
+          color: '#b00b69',
+        },
       });
+    }
+
+    if (details === '') {
+      toast.error('Number cannot be empty!', {
+        duration: 3000,
+        icon: '🤷‍♂️',
+        style: {
+          border: '1px solid tomato',
+          color: '#b00b69',
+        },
+      });
+    }
+
+    if (title && details) {
+      createNote(newNote);
+      e.currentTarget.reset();
+
+      toast.success('Note added', {
+        duration: 3000,
+        icon: '📝',
+        style: {
+          border: '1px solid green',
+          color: '#69b00b',
+        },
+      });
+      history.push('/notes');
     }
   };
 
@@ -74,50 +94,76 @@ export default function CreateNote() {
       <form noValidate autoComplete="off" onSubmit={handleSubmit}>
         <TextField
           className={classes.field}
-          onChange={e => setTitle(e.target.value)}
           label="Note Title"
+          name="title"
+          type="text"
           variant="outlined"
           color="secondary"
           // fullWidth
           required
-          error={titleError}
         />
         <TextField
           className={classes.field}
-          onChange={e => setDetails(e.target.value)}
           label="Details"
+          name="details"
+          type="text"
           variant="outlined"
           color="secondary"
           multiline
           rows={4}
           // fullWidth
           required
-          error={detailsError}
         />
 
         <FormControl className={classes.field}>
           <FormLabel>Note Category</FormLabel>
           <RadioGroup
             value={category}
-            onChange={e => setCategory(e.target.value)}
+            onChange={e => setCategory(e.currentTarget.value)}
           >
-            <FormControlLabel value="money" control={<Radio />} label="Money" />
-            <FormControlLabel value="todos" control={<Radio />} label="Todos" />
+            <FormControlLabel
+              value="money"
+              control={<Radio />}
+              label="Money"
+              name="radio"
+            />
+            <FormControlLabel
+              value="todos"
+              control={<Radio />}
+              label="Todos"
+              name="radio"
+            />
             <FormControlLabel
               value="reminders"
               control={<Radio />}
               label="Reminders"
+              name="radio"
             />
-            <FormControlLabel value="work" control={<Radio />} label="Work" />
+            <FormControlLabel
+              value="work"
+              control={<Radio />}
+              label="Work"
+              name="radio"
+            />
           </RadioGroup>
         </FormControl>
 
         <Button
           type="submit"
+          disabled={isLoading}
           color="secondary"
           variant="contained"
           endIcon={<KeyboardArrowRightIcon />}
         >
+          {isLoading && (
+            <Loader
+              className="Loader"
+              type="ThreeDots"
+              color="blue"
+              height={20}
+              width={24}
+            />
+          )}
           Submit
         </Button>
       </form>

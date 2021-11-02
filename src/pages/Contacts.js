@@ -2,10 +2,10 @@ import {
   useDeleteContactMutation,
   useFetchContactsQuery,
 } from '../redux/contacts/contactSlice';
+import Loader from 'react-loader-spinner';
 import Container from '@material-ui/core/Container';
 import Masonry from 'react-masonry-css';
 import ContactCard from '../components/ContactCard';
-import Loader from 'react-loader-spinner';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 export default function Notes() {
@@ -24,7 +24,7 @@ export default function Notes() {
 
   return (
     <Container>
-      {!contacts && <h1>No contacts to show</h1>}
+      {contacts === [] && <h1>No contacts to show</h1>}
       {isFetching && (
         <Loader
           className="Loader"
@@ -51,7 +51,11 @@ export default function Notes() {
         >
           {contacts.map(contact => (
             <div key={contact.id}>
-              <ContactCard contact={contact} handleDelete={handleDelete} />
+              <ContactCard
+                contact={contact}
+                handleDelete={handleDelete}
+                deleting={isDeleting}
+              />
             </div>
           ))}
         </Masonry>

@@ -1,26 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import {
+  useDeleteNoteMutation,
+  useFetchNotesQuery,
+} from '../redux/notes/noteSlice';
+import Loader from 'react-loader-spinner';
 import Container from '@material-ui/core/Container';
 import Masonry from 'react-masonry-css';
 import NoteCard from '../components/NoteCard';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 export default function Notes() {
-  const [notes, setNotes] = useState([]);
-
-  useEffect(() => {
-    fetch('https://617d4f611eadc5001713647b.mockapi.io/api/v1/notes')
-      .then(res => res.json())
-      .then(data => setNotes(data));
-  }, []);
+  const { data: notes, isFetching } = useFetchNotesQuery();
+  const [deleteNote, { isLoading: isDeleting }] = useDeleteNoteMutation();
 
   const handleDelete = async id => {
-    await fetch(
-      'https://617d4f611eadc5001713647b.mockapi.io/api/v1/notes/' + id,
-      {
-        method: 'DELETE',
-      }
-    );
-    const newNotes = notes.filter(note => note.id !== id);
-    setNotes(newNotes);
+    deleteNote(id);
   };
 
   const breakpoints = {
@@ -31,17 +24,42 @@ export default function Notes() {
 
   return (
     <Container>
-      <Masonry
-        breakpointCols={breakpoints}
-        className="my-masonry-grid"
-        columnClassName="my-masonry-grid_column"
-      >
-        {notes.map(note => (
-          <div key={note.id}>
-            <NoteCard note={note} handleDelete={handleDelete} />
-          </div>
-        ))}
-      </Masonry>
+      {notes === [] && <h1>No notes to show</h1>}
+      {isFetching && (
+        <Loader
+          className="Loader"
+          type="Puff"
+          color="blue"
+          height={100}
+          width={100}
+        />
+      )}
+      {isDeleting && (
+        <Loader
+          className="Loader"
+          type="BallTriangle"
+          color="blue"
+          height={60}
+          width={60}
+        />
+      )}
+      {notes && (
+        <Masonry
+          breakpointCols={breakpoints}
+          className="my-masonry-grid"
+          columnClassName="my-masonry-grid_column"
+        >
+          {notes.map(note => (
+            <div key={note.id}>
+              <NoteCard
+                note={note}
+                handleDelete={handleDelete}
+                deleting={isDeleting}
+              />
+            </div>
+          ))}
+        </Masonry>
+      )}
     </Container>
   );
 }

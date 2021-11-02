@@ -1,17 +1,18 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core';
+import { yellow, green, pink, blue } from '@material-ui/core/colors';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
-import { makeStyles } from '@material-ui/core';
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import Avatar from '@material-ui/core/Avatar';
-import { yellow, green, pink, blue } from '@material-ui/core/colors';
 
 const useStyles = makeStyles({
   avatar: {
-    backgroundColor: (note) => {
+    backgroundColor: note => {
       if (note.category === 'work') {
         return yellow[700];
       }
@@ -26,7 +27,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function NoteCard({ note, handleDelete }) {
+export default function NoteCard({ note, handleDelete, deleting }) {
   const classes = useStyles(note);
 
   return (
@@ -40,7 +41,7 @@ export default function NoteCard({ note, handleDelete }) {
           }
           action={
             <IconButton onClick={() => handleDelete(note.id)}>
-              <DeleteOutlined />
+              {deleting ? <DeleteForeverOutlinedIcon /> : <DeleteOutlined />}
             </IconButton>
           }
           title={note.title}
