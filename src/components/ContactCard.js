@@ -44,12 +44,12 @@ export default function ContactCard({ contact, handleDelete, deleting }) {
               {deleting ? <DeleteForeverOutlinedIcon /> : <DeleteOutlined />}
             </IconButton>
           }
-          title={contact.name}
-          subheader={contact.category}
+          title={<b>{contact.name}</b>}
+          subheader={<b>{contact.category}</b>}
         />
         <CardContent>
           <Typography variant="body2" color="textSecondary">
-            {contact.phone}
+            Phone number: <b>{contact.phone}</b>
           </Typography>
         </CardContent>
       </Card>

@@ -34,3 +34,12 @@ input:invalid {
   right: 0;
   z-index: 999;
 }
+
+.MuiPaper-rounded {
+  cursor: pointer;
+  transition: transform 500 ease-in-out;
+}
+
+.MuiPaper-rounded:hover {
+  transform: scale(0.99);
+}
