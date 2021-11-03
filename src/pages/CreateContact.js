@@ -135,14 +135,14 @@ export default function CreateContact() {
           className={classes.field}
           label="Number"
           name="number"
-          type="number"
+          type="tel"
           variant="outlined"
           color="secondary"
           // fullWidth
           required
-          helperText="Phone number can consist of numbers, spaces, dashes, brackets and start with +"
+          helperText="Phone number can consist of minimum 10 numbers, no spaces, no dashes, no brackets!"
           inputProps={{
-            pattern: '[0-9]{10}',
+            pattern: '^!*([0-9]!*){10,}$',
           }}
         />
 
