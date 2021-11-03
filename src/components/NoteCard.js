@@ -27,7 +27,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function NoteCard({ note, handleDelete }) {
+export default function NoteCard({ note }) {
   const [deleteNote, { isLoading: deleting }] = useDeleteNoteMutation();
   const classes = useStyles(note);
 
@@ -42,7 +42,11 @@ export default function NoteCard({ note, handleDelete }) {
           }
           action={
             <IconButton onClick={() => deleteNote(note.id)}>
-              {deleting ? <DeleteForeverOutlinedIcon /> : <DeleteOutlined />}
+              {deleting ? (
+                <DeleteForeverOutlinedIcon sx={{ color: pink[500] }} />
+              ) : (
+                <DeleteOutlined />
+              )}
             </IconButton>
           }
           title={note.title}

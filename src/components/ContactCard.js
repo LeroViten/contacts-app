@@ -43,7 +43,11 @@ export default function ContactCard({ contact }) {
           }
           action={
             <IconButton onClick={() => deleteContact(contact.id)}>
-              {deleting ? <DeleteForeverOutlinedIcon /> : <DeleteOutlined />}
+              {deleting ? (
+                <DeleteForeverOutlinedIcon sx={{ color: pink[500] }} />
+              ) : (
+                <DeleteOutlined />
+              )}
             </IconButton>
           }
           title={<b>{contact.name}</b>}
