@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core';
 import { useSpring, animated } from 'react-spring';
-import {
-  useDeleteContactMutation,
-  useFetchContactsQuery,
-} from '../redux/contacts/contactSlice';
+import { useFetchContactsQuery } from '../redux/contacts/contactSlice';
 import Loader from 'react-loader-spinner';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
@@ -27,7 +24,6 @@ const useStyles = makeStyles({
 
 export default function Contacts() {
   const { data, isFetching } = useFetchContactsQuery();
-  const [deleteContact, { isLoading: isDeleting }] = useDeleteContactMutation();
   const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
   const classes = useStyles();
@@ -42,10 +38,6 @@ export default function Contacts() {
       setContacts(data);
     }
   }, [data]);
-
-  const handleDelete = async id => {
-    deleteContact(id);
-  };
 
   const getVisibleContacts = () => {
     const normalizedFilter = filter.toLowerCase();
@@ -64,18 +56,9 @@ export default function Contacts() {
         <Loader
           className="Loader"
           type="Puff"
-          color="blue"
+          color="#77d5f1"
           height={100}
           width={100}
-        />
-      )}
-      {isDeleting && (
-        <Loader
-          className="Loader"
-          type="BallTriangle"
-          color="blue"
-          height={60}
-          width={60}
         />
       )}
       <TextField
@@ -98,11 +81,7 @@ export default function Contacts() {
         >
           {visibleContacts.map(contact => (
             <animated.div key={contact.id} style={animProps}>
-              <ContactCard
-                contact={contact}
-                handleDelete={handleDelete}
-                deleting={isDeleting}
-              />
+              <ContactCard contact={contact} />
             </animated.div>
           ))}
         </Masonry>

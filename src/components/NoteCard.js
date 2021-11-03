@@ -1,4 +1,4 @@
-import React from 'react';
+import { useDeleteNoteMutation } from '../redux/notes/noteSlice';
 import { makeStyles } from '@material-ui/core';
 import { yellow, green, pink, blue } from '@material-ui/core/colors';
 import Card from '@material-ui/core/Card';
@@ -27,7 +27,8 @@ const useStyles = makeStyles({
   },
 });
 
-export default function NoteCard({ note, handleDelete, deleting }) {
+export default function NoteCard({ note, handleDelete }) {
+  const [deleteNote, { isLoading: deleting }] = useDeleteNoteMutation();
   const classes = useStyles(note);
 
   return (
@@ -40,7 +41,7 @@ export default function NoteCard({ note, handleDelete, deleting }) {
             </Avatar>
           }
           action={
-            <IconButton onClick={() => handleDelete(note.id)}>
+            <IconButton onClick={() => deleteNote(note.id)}>
               {deleting ? <DeleteForeverOutlinedIcon /> : <DeleteOutlined />}
             </IconButton>
           }

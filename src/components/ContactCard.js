@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
+import { useDeleteContactMutation } from '../redux/contacts/contactSlice';
 import { yellow, green, pink, blue } from '@material-ui/core/colors';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -27,7 +28,8 @@ const useStyles = makeStyles({
   },
 });
 
-export default function ContactCard({ contact, handleDelete, deleting }) {
+export default function ContactCard({ contact }) {
+  const [deleteContact, { isLoading: deleting }] = useDeleteContactMutation();
   const classes = useStyles(contact);
 
   return (
@@ -40,7 +42,7 @@ export default function ContactCard({ contact, handleDelete, deleting }) {
             </Avatar>
           }
           action={
-            <IconButton onClick={() => handleDelete(contact.id)}>
+            <IconButton onClick={() => deleteContact(contact.id)}>
               {deleting ? <DeleteForeverOutlinedIcon /> : <DeleteOutlined />}
             </IconButton>
           }

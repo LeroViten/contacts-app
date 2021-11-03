@@ -1,7 +1,4 @@
-import {
-  useDeleteNoteMutation,
-  useFetchNotesQuery,
-} from '../redux/notes/noteSlice';
+import { useFetchNotesQuery } from '../redux/notes/noteSlice';
 import { useSpring, animated } from 'react-spring';
 import Loader from 'react-loader-spinner';
 import Container from '@material-ui/core/Container';
@@ -11,16 +8,16 @@ import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 export default function Notes() {
   const { data: notes, isFetching } = useFetchNotesQuery();
-  const [deleteNote, { isLoading: isDeleting }] = useDeleteNoteMutation();
+  // const [deleteNote, { isLoading: isDeleting }] = useDeleteNoteMutation();
   const animProps = useSpring({
     to: { opacity: 1 },
     from: { opacity: 0 },
     delay: 1000,
   });
 
-  const handleDelete = async id => {
-    deleteNote(id);
-  };
+  // const handleDelete = async id => {
+  //   deleteNote(id);
+  // };
 
   const breakpoints = {
     default: 3,
@@ -35,18 +32,9 @@ export default function Notes() {
         <Loader
           className="Loader"
           type="Puff"
-          color="blue"
+          color="#77d5f1"
           height={100}
           width={100}
-        />
-      )}
-      {isDeleting && (
-        <Loader
-          className="Loader"
-          type="BallTriangle"
-          color="blue"
-          height={60}
-          width={60}
         />
       )}
       {notes && (
@@ -57,11 +45,7 @@ export default function Notes() {
         >
           {notes.map(note => (
             <animated.div key={note.id} style={animProps}>
-              <NoteCard
-                note={note}
-                handleDelete={handleDelete}
-                deleting={isDeleting}
-              />
+              <NoteCard note={note} />
             </animated.div>
           ))}
         </Masonry>

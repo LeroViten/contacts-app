@@ -70,7 +70,7 @@ export default function Weather() {
             <Loader
               className="Loader"
               type="ThreeDots"
-              color="blue"
+              color="#77d5f1"
               height={20}
               width={24}
             />
