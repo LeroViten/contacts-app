@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import Avatar from '@material-ui/core/Avatar';
+import Hover from '../operations/Hover'; // custom hover animation with springs
 
 const useStyles = makeStyles({
   avatar: {
@@ -41,13 +42,15 @@ export default function NoteCard({ note }) {
             </Avatar>
           }
           action={
-            <IconButton onClick={() => deleteNote(note.id)}>
-              {deleting ? (
-                <DeleteForeverOutlinedIcon sx={{ color: pink[500] }} />
-              ) : (
-                <DeleteOutlined />
-              )}
-            </IconButton>
+            <Hover rotation={20} timing={200}>
+              <IconButton onClick={() => deleteNote(note.id)}>
+                {deleting ? (
+                  <DeleteForeverOutlinedIcon sx={{ color: pink[500] }} />
+                ) : (
+                  <DeleteOutlined />
+                )}
+              </IconButton>
+            </Hover>
           }
           title={note.title}
           subheader={note.category}

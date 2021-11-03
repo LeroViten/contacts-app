@@ -1,4 +1,3 @@
-import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { useDeleteContactMutation } from '../redux/contacts/contactSlice';
 import { yellow, green, pink, blue } from '@material-ui/core/colors';
@@ -10,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import Avatar from '@material-ui/core/Avatar';
+import Hover from '../operations/Hover'; // custom hover animation with springs
 
 const useStyles = makeStyles({
   avatar: {
@@ -42,13 +42,15 @@ export default function ContactCard({ contact }) {
             </Avatar>
           }
           action={
-            <IconButton onClick={() => deleteContact(contact.id)}>
-              {deleting ? (
-                <DeleteForeverOutlinedIcon sx={{ color: pink[500] }} />
-              ) : (
-                <DeleteOutlined />
-              )}
-            </IconButton>
+            <Hover rotation={20} timing={200}>
+              <IconButton onClick={() => deleteContact(contact.id)}>
+                {deleting ? (
+                  <DeleteForeverOutlinedIcon sx={{ color: pink[500] }} />
+                ) : (
+                  <DeleteOutlined />
+                )}
+              </IconButton>
+            </Hover>
           }
           title={<b>{contact.name}</b>}
           subheader={<b>{contact.category}</b>}

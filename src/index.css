@@ -28,12 +28,12 @@ ol {
 .my-masonry-grid_column > div {
   /* change div to reference your elements you put in <Masonry> */
   margin-bottom: 30px;
-  transition: all 1500 ease-in-out;
+  /* transition: all 1500 ease-in-out; */
 }
 
-.my-masonry-grid_column > div > div:hover {
+/* .my-masonry-grid_column > div > div:hover {
   transform: scale(0.99);
-}
+} */
 
 input:invalid {
   border: 'solid 2px tomato';
