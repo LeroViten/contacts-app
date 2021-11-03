@@ -9,7 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import Avatar from '@material-ui/core/Avatar';
-import Hover from '../operations/Hover'; // custom hover animation with springs
+import WobbleHover from '../operations/WobbleHover'; // custom hover animation with springs
+import ScaleHover from '../operations/ScaleHover'; // custom hover animation with springs
 
 const useStyles = makeStyles({
   avatar: {
@@ -33,34 +34,36 @@ export default function NoteCard({ note }) {
   const classes = useStyles(note);
 
   return (
-    <div>
-      <Card elevation={1}>
-        <CardHeader
-          avatar={
-            <Avatar className={classes.avatar}>
-              {note.category[0].toUpperCase()}
-            </Avatar>
-          }
-          action={
-            <Hover rotation={20} timing={200}>
-              <IconButton onClick={() => deleteNote(note.id)}>
-                {deleting ? (
-                  <DeleteForeverOutlinedIcon sx={{ color: pink[500] }} />
-                ) : (
-                  <DeleteOutlined />
-                )}
-              </IconButton>
-            </Hover>
-          }
-          title={note.title}
-          subheader={note.category}
-        />
-        <CardContent>
-          <Typography variant="body2" color="textSecondary">
-            {note.details}
-          </Typography>
-        </CardContent>
-      </Card>
-    </div>
+    <>
+      <ScaleHover value={1.02} timing={200}>
+        <Card elevation={1}>
+          <CardHeader
+            avatar={
+              <Avatar className={classes.avatar}>
+                {note.category[0].toUpperCase()}
+              </Avatar>
+            }
+            action={
+              <WobbleHover rotation={20} timing={200}>
+                <IconButton onClick={() => deleteNote(note.id)}>
+                  {deleting ? (
+                    <DeleteForeverOutlinedIcon sx={{ color: pink[500] }} />
+                  ) : (
+                    <DeleteOutlined />
+                  )}
+                </IconButton>
+              </WobbleHover>
+            }
+            title={note.title}
+            subheader={note.category}
+          />
+          <CardContent>
+            <Typography variant="body2" color="textSecondary">
+              {note.details}
+            </Typography>
+          </CardContent>
+        </Card>
+      </ScaleHover>
+    </>
   );
 }

@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import { useSpring, animated } from 'react-spring';
+import { useGetWeatherByNameQuery } from '../redux/weather/weatherSlice';
 import Loader from 'react-loader-spinner';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import MoveRightHover from '../operations/MoveRightHover';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
-import { useGetWeatherByNameQuery } from '../redux/weather/weatherSlice';
 
 const useStyles = makeStyles({
   field: {
@@ -59,24 +60,26 @@ export default function Weather() {
           // fullWidth
           helperText="Type a city name"
         />
-        <Button
-          type="submit"
-          disabled={isFetching}
-          color="secondary"
-          variant="contained"
-          endIcon={<KeyboardArrowRightIcon />}
-        >
-          {isFetching && (
-            <Loader
-              className="Loader"
-              type="ThreeDots"
-              color="#77d5f1"
-              height={20}
-              width={24}
-            />
-          )}
-          Find
-        </Button>
+        <MoveRightHover x={5} timing={200}>
+          <Button
+            type="submit"
+            disabled={isFetching}
+            color="secondary"
+            variant="contained"
+            endIcon={<KeyboardArrowRightIcon />}
+          >
+            {isFetching && (
+              <Loader
+                className="Loader"
+                type="ThreeDots"
+                color="#77d5f1"
+                height={20}
+                width={24}
+              />
+            )}
+            Find
+          </Button>
+        </MoveRightHover>
       </form>
 
       {showNotFoundError && (

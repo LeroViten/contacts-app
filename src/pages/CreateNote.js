@@ -14,6 +14,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Loader from 'react-loader-spinner';
+import MoveRightHover from '../operations/MoveRightHover';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 const useStyles = makeStyles({
@@ -148,24 +149,26 @@ export default function CreateNote() {
           </RadioGroup>
         </FormControl>
 
-        <Button
-          type="submit"
-          disabled={isLoading}
-          color="secondary"
-          variant="contained"
-          endIcon={<KeyboardArrowRightIcon />}
-        >
-          {isLoading && (
-            <Loader
-              className="Loader"
-              type="ThreeDots"
-              color="blue"
-              height={20}
-              width={24}
-            />
-          )}
-          Submit
-        </Button>
+        <MoveRightHover x={5} timing={200}>
+          <Button
+            type="submit"
+            disabled={isLoading}
+            color="secondary"
+            variant="contained"
+            endIcon={<KeyboardArrowRightIcon />}
+          >
+            {isLoading && (
+              <Loader
+                className="Loader"
+                type="ThreeDots"
+                color="blue"
+                height={20}
+                width={24}
+              />
+            )}
+            Submit
+          </Button>
+        </MoveRightHover>
       </form>
     </Container>
   );
