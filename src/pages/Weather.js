@@ -55,7 +55,7 @@ export default function Weather() {
           label="Search"
           name="citySearch"
           type="text"
-          variant="standard"
+          variant="outlined"
           color="secondary"
           // fullWidth
           helperText="Type a city name"
@@ -64,7 +64,6 @@ export default function Weather() {
           <Button
             type="submit"
             disabled={isFetching}
-            color="secondary"
             variant="contained"
             endIcon={<KeyboardArrowRightIcon />}
           >

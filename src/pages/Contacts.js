@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core';
 import { useSpring, animated } from 'react-spring';
+import { useDispatch, useSelector } from 'react-redux';
+import { authSelectors } from '../redux/auth';
+import { useFetchUserQuery } from '../redux/auth/authApi';
+import { refreshCredentials } from '../redux/auth/authSlice';
 import { useFetchContactsQuery } from '../redux/contacts/contactSlice';
 import Loader from 'react-loader-spinner';
 import Container from '@material-ui/core/Container';
@@ -23,21 +27,39 @@ const useStyles = makeStyles({
 });
 
 export default function Contacts() {
-  const { data, isFetching } = useFetchContactsQuery();
   const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const token = useSelector(authSelectors.getToken);
+  const { data: user } = useFetchUserQuery(token, {
+    skip: token === null,
+  });
+  const { data, isFetching } = useFetchContactsQuery();
+
+  useEffect(() => {
+    (async () => {
+      await user;
+      if (user) {
+        dispatch(refreshCredentials(user));
+      }
+    })();
+  }, [user, dispatch]);
+
+  useEffect(() => {
+    (async () => {
+      await data;
+      if (data) {
+        setContacts(data);
+      }
+    })();
+  }, [data]);
+
   const animProps = useSpring({
     to: { opacity: 1 },
     from: { opacity: 0 },
     delay: 1000,
   });
-
-  useEffect(() => {
-    if (data) {
-      setContacts(data);
-    }
-  }, [data]);
 
   const getVisibleContacts = () => {
     const normalizedFilter = filter.toLowerCase();

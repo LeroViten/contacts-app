@@ -40,7 +40,7 @@ export default function ContactCard({ contact }) {
           <CardHeader
             avatar={
               <Avatar className={classes.avatar}>
-                {contact.category[0].toUpperCase()}
+                {contact.name[0].toUpperCase()}
               </Avatar>
             }
             action={
@@ -55,11 +55,11 @@ export default function ContactCard({ contact }) {
               </WobbleHover>
             }
             title={<b>{contact.name}</b>}
-            subheader={<b>{contact.category}</b>}
+            // subheader={<b>{contact.category}</b>}
           />
           <CardContent>
             <Typography variant="body2" color="textSecondary">
-              Phone number: <b>{contact.phone}</b>
+              Phone number: <b>{contact.number}</b>
             </Typography>
           </CardContent>
         </Card>

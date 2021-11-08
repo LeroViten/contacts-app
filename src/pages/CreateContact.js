@@ -1,21 +1,25 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { makeStyles } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { authSelectors } from '../redux/auth';
 import {
   useCreateContactMutation,
   useFetchContactsQuery,
 } from '../redux/contacts/contactSlice';
+import { useFetchUserQuery } from '../redux/auth/authApi';
+import { refreshCredentials } from '../redux/auth/authSlice';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
+// import Radio from '@material-ui/core/Radio';
+// import RadioGroup from '@material-ui/core/RadioGroup';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import FormControl from '@material-ui/core/FormControl';
+// import FormLabel from '@material-ui/core/FormLabel';
 import Loader from 'react-loader-spinner';
 import MoveRightHover from '../operations/MoveRightHover';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
@@ -29,23 +33,45 @@ const useStyles = makeStyles({
 });
 
 export default function CreateContact() {
-  const [category, setCategory] = useState('family');
+  // const [category, setCategory] = useState('family');
+  const [contacts, setContacts] = useState([]);
   const classes = useStyles();
   const history = useHistory();
-
+  const dispatch = useDispatch();
+  const token = useSelector(authSelectors.getToken);
+  const { data: user } = useFetchUserQuery(token, {
+    skip: token === null,
+  });
   const [createContact, { isLoading }] = useCreateContactMutation();
-  const { data: contacts } = useFetchContactsQuery();
+  const { data } = useFetchContactsQuery();
+
+  useEffect(() => {
+    (async () => {
+      await user;
+      if (user) {
+        dispatch(refreshCredentials(user));
+      }
+    })();
+  }, [user, dispatch]);
+
+  useEffect(() => {
+    (async () => {
+      await data;
+      if (data) {
+        setContacts(data);
+      }
+    })();
+  }, [data]);
 
   const handleSubmit = e => {
     const name = e.currentTarget.name.value;
-    const phone = e.currentTarget.number.value;
+    const number = e.currentTarget.number.value;
 
     e.preventDefault();
 
     const newContact = {
       name,
-      phone,
-      category,
+      number,
     };
 
     if (name === '') {
@@ -59,7 +85,7 @@ export default function CreateContact() {
       });
     }
 
-    if (phone === '') {
+    if (number === '') {
       toast.error('Number cannot be empty!', {
         duration: 3000,
         icon: '🤷‍♂️',
@@ -87,7 +113,7 @@ export default function CreateContact() {
       return;
     }
 
-    if (name && phone) {
+    if (name && number) {
       createContact(newContact);
 
       e.currentTarget.reset();
@@ -101,7 +127,7 @@ export default function CreateContact() {
         },
       });
 
-      history.push('/');
+      history.push('/contacts');
     }
   };
 
@@ -147,7 +173,7 @@ export default function CreateContact() {
           }}
         />
 
-        <FormControl className={classes.field}>
+        {/* <FormControl className={classes.field}>
           <FormLabel>Number Category</FormLabel>
           <RadioGroup
             value={category}
@@ -172,7 +198,7 @@ export default function CreateContact() {
               name="radio"
             />
           </RadioGroup>
-        </FormControl>
+        </FormControl> */}
 
         <MoveRightHover x={5} timing={200}>
           <Button
