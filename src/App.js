@@ -35,6 +35,9 @@ const Notes = lazy(() =>
 const CreateNote = lazy(() =>
   import('./pages/CreateNote' /* webpackChunkName: "create-note" */)
 );
+const EditNote = lazy(() =>
+  import('./pages/EditNote' /* webpackChunkName: "edit-note" */)
+);
 
 const theme = createTheme({
   palette: {
@@ -113,6 +116,9 @@ function App() {
               </PrivateRoute>
               <PrivateRoute exact path="/create-note">
                 <CreateNote />
+              </PrivateRoute>
+              <PrivateRoute exact path="/edit-note/:id">
+                <EditNote />
               </PrivateRoute>
               <PrivateRoute exact path="/weather">
                 <Weather />

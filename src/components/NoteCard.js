@@ -8,9 +8,11 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import DeleteOutlined from '@material-ui/icons/DeleteOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Avatar from '@material-ui/core/Avatar';
 import WobbleHover from '../operations/WobbleHover'; // custom hover animation with springs
 import ScaleHover from '../operations/ScaleHover'; // custom hover animation with springs
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles({
   avatar: {
@@ -32,6 +34,11 @@ const useStyles = makeStyles({
 export default function NoteCard({ note }) {
   const [deleteNote, { isLoading: deleting }] = useDeleteNoteMutation();
   const classes = useStyles(note);
+  const history = useHistory();
+
+  const handleEditNote = id => {
+    history.push(`/edit-note/${id}`);
+  };
 
   return (
     <>
@@ -44,15 +51,22 @@ export default function NoteCard({ note }) {
               </Avatar>
             }
             action={
-              <WobbleHover rotation={20} timing={200}>
-                <IconButton onClick={() => deleteNote(note.id)}>
-                  {deleting ? (
-                    <DeleteForeverOutlinedIcon sx={{ color: pink[500] }} />
-                  ) : (
-                    <DeleteOutlined />
-                  )}
-                </IconButton>
-              </WobbleHover>
+              <>
+                <WobbleHover rotation={20} timing={200}>
+                  <IconButton onClick={() => handleEditNote(note.id)}>
+                    <EditOutlinedIcon />
+                  </IconButton>
+                </WobbleHover>
+                <WobbleHover rotation={20} timing={200}>
+                  <IconButton onClick={() => deleteNote(note.id)}>
+                    {deleting ? (
+                      <DeleteForeverOutlinedIcon sx={{ color: pink[500] }} />
+                    ) : (
+                      <DeleteOutlined />
+                    )}
+                  </IconButton>
+                </WobbleHover>
+              </>
             }
             title={note.title}
             subheader={note.category}

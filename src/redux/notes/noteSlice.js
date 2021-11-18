@@ -30,6 +30,18 @@ export const noteApi = createApi({
       }),
       invalidatesTags: ['Note'],
     }),
+    editNote: builder.mutation({
+      query: ({ id, title, details, category }) => ({
+        url: `/notes/${id}`,
+        method: 'PUT',
+        body: {
+          title,
+          details,
+          category,
+        },
+      }),
+      invalidatesTags: ['Note'],
+    }),
   }),
 });
 
@@ -37,4 +49,5 @@ export const {
   useFetchNotesQuery,
   useDeleteNoteMutation,
   useCreateNoteMutation,
+  useEditNoteMutation,
 } = noteApi;
