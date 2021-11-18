@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useCreateNoteMutation } from '../redux/notes/noteSlice';
 import { toast } from 'react-hot-toast';
+import { useSpring, animated } from 'react-spring';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
@@ -30,6 +31,14 @@ export default function CreateNote() {
   const classes = useStyles();
   const history = useHistory();
   const [createNote, { isLoading }] = useCreateNoteMutation();
+
+  const pagesAnimProps = useSpring({
+    from: {
+      opacity: 0,
+      transform: 'translate(-1000px, 0px)',
+    },
+    to: { opacity: 1, transform: 'translate(0px,0px)' },
+  });
 
   const handleSubmit = e => {
     const title = e.currentTarget.title.value;
@@ -83,93 +92,95 @@ export default function CreateNote() {
 
   return (
     <Container size="sm">
-      <Typography
-        variant="h6"
-        color="textSecondary"
-        component="h2"
-        gutterBottom
-      >
-        Create a New Note
-      </Typography>
+      <animated.div style={pagesAnimProps}>
+        <Typography
+          variant="h6"
+          color="textSecondary"
+          component="h2"
+          gutterBottom
+        >
+          Create a New Note
+        </Typography>
 
-      <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-        <TextField
-          className={classes.field}
-          label="Note Title"
-          name="title"
-          type="text"
-          variant="outlined"
-          color="secondary"
-          // fullWidth
-          required
-        />
-        <TextField
-          className={classes.field}
-          label="Details"
-          name="details"
-          type="text"
-          variant="outlined"
-          color="secondary"
-          multiline
-          rows={4}
-          // fullWidth
-          required
-        />
-
-        <FormControl className={classes.field}>
-          <FormLabel>Note Category</FormLabel>
-          <RadioGroup
-            value={category}
-            onChange={e => setCategory(e.currentTarget.value)}
-          >
-            <FormControlLabel
-              value="money"
-              control={<Radio />}
-              label="Money"
-              name="radio"
-            />
-            <FormControlLabel
-              value="todos"
-              control={<Radio />}
-              label="Todos"
-              name="radio"
-            />
-            <FormControlLabel
-              value="reminders"
-              control={<Radio />}
-              label="Reminders"
-              name="radio"
-            />
-            <FormControlLabel
-              value="work"
-              control={<Radio />}
-              label="Work"
-              name="radio"
-            />
-          </RadioGroup>
-        </FormControl>
-
-        <MoveRightHover x={5} timing={200}>
-          <Button
-            type="submit"
-            disabled={isLoading}
+        <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+          <TextField
+            className={classes.field}
+            label="Note Title"
+            name="title"
+            type="text"
+            variant="outlined"
             color="secondary"
-            variant="contained"
-            endIcon={<KeyboardArrowRightIcon />}
-          >
-            {isLoading && (
-              <Loader
-                className="Loader"
-                type="ThreeDots"
-                color="blue"
-                height={20}
-                width={24}
+            // fullWidth
+            required
+          />
+          <TextField
+            className={classes.field}
+            label="Details"
+            name="details"
+            type="text"
+            variant="outlined"
+            color="secondary"
+            multiline
+            rows={4}
+            // fullWidth
+            required
+          />
+
+          <FormControl className={classes.field}>
+            <FormLabel>Note Category</FormLabel>
+            <RadioGroup
+              value={category}
+              onChange={e => setCategory(e.currentTarget.value)}
+            >
+              <FormControlLabel
+                value="money"
+                control={<Radio />}
+                label="Money"
+                name="radio"
               />
-            )}
-            Submit
-          </Button>
-        </MoveRightHover>
-      </form>
+              <FormControlLabel
+                value="todos"
+                control={<Radio />}
+                label="Todos"
+                name="radio"
+              />
+              <FormControlLabel
+                value="reminders"
+                control={<Radio />}
+                label="Reminders"
+                name="radio"
+              />
+              <FormControlLabel
+                value="work"
+                control={<Radio />}
+                label="Work"
+                name="radio"
+              />
+            </RadioGroup>
+          </FormControl>
+
+          <MoveRightHover x={5} timing={200}>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              color="secondary"
+              variant="contained"
+              endIcon={<KeyboardArrowRightIcon />}
+            >
+              {isLoading && (
+                <Loader
+                  className="Loader"
+                  type="ThreeDots"
+                  color="blue"
+                  height={20}
+                  width={24}
+                />
+              )}
+              Submit
+            </Button>
+          </MoveRightHover>
+        </form>
+      </animated.div>
     </Container>
   );
 }

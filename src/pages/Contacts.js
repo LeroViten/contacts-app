@@ -6,12 +6,15 @@ import { authSelectors } from '../redux/auth';
 import { useFetchUserQuery } from '../redux/auth/authApi';
 import { refreshCredentials } from '../redux/auth/authSlice';
 import { useFetchContactsQuery } from '../redux/contacts/contactSlice';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 import Loader from 'react-loader-spinner';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import Masonry from 'react-masonry-css';
 import ContactCard from '../components/ContactCard';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+import { useHistory } from 'react-router';
 
 const breakpoints = {
   default: 3,
@@ -24,6 +27,11 @@ const useStyles = makeStyles({
     marginBottom: 10,
     display: 'block',
   },
+  fabButton: {
+    position: 'absolute !important',
+    bottom: '0px !important',
+    right: '0px !important',
+  },
 });
 
 export default function Contacts() {
@@ -31,6 +39,7 @@ export default function Contacts() {
   const [filter, setFilter] = useState('');
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
   const token = useSelector(authSelectors.getToken);
   const { data: user } = useFetchUserQuery(token, {
     skip: token === null,
@@ -55,11 +64,31 @@ export default function Contacts() {
     })();
   }, [data]);
 
-  const animProps = useSpring({
+  const pagesAnimProps = useSpring({
+    from: {
+      opacity: 0,
+      transform: 'translate(-1000px, 0px)',
+    },
+    to: { opacity: 1, transform: 'translate(0px,0px)' },
+  });
+
+  const cardsAnimProps = useSpring({
     to: { opacity: 1 },
     from: { opacity: 0 },
     delay: 1000,
   });
+
+  const fabAnimProps = useSpring({
+    to: { opacity: 1 },
+    from: { opacity: 0 },
+    delay: 2000,
+  });
+
+  const handleClick = e => {
+    e.preventDefault();
+
+    history.push('/create-contact');
+  };
 
   const getVisibleContacts = () => {
     const normalizedFilter = filter.toLowerCase();
@@ -73,41 +102,53 @@ export default function Contacts() {
 
   return (
     <Container>
-      {contacts === [] && <h1>No contacts to show</h1>}
-      {isFetching && (
-        <Loader
-          className="Loader"
-          type="Puff"
-          color="#77d5f1"
-          height={100}
-          width={100}
+      <animated.div style={pagesAnimProps}>
+        {contacts === [] && <h1>No contacts to show</h1>}
+        {isFetching && (
+          <Loader
+            className="Loader"
+            type="Puff"
+            color="#77d5f1"
+            height={100}
+            width={100}
+          />
+        )}
+        <TextField
+          className={classes.field}
+          label="Search"
+          name="search"
+          type="text"
+          variant="standard"
+          color="secondary"
+          autoComplete="off"
+          // fullWidth
+          helperText="Type a name to find"
+          onChange={e => setFilter(e.currentTarget.value)}
         />
-      )}
-      <TextField
-        className={classes.field}
-        label="Search"
-        name="search"
-        type="text"
-        variant="standard"
-        color="secondary"
-        autoComplete="off"
-        // fullWidth
-        helperText="Type a name to find"
-        onChange={e => setFilter(e.currentTarget.value)}
-      />
-      {contacts && (
-        <Masonry
-          breakpointCols={breakpoints}
-          className="my-masonry-grid"
-          columnClassName="my-masonry-grid_column"
-        >
-          {visibleContacts.map(contact => (
-            <animated.div key={contact.id} style={animProps}>
-              <ContactCard contact={contact} />
-            </animated.div>
-          ))}
-        </Masonry>
-      )}
+        {contacts && (
+          <Masonry
+            breakpointCols={breakpoints}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column"
+          >
+            {visibleContacts.map(contact => (
+              <animated.div key={contact.id} style={cardsAnimProps}>
+                <ContactCard contact={contact} />
+              </animated.div>
+            ))}
+          </Masonry>
+        )}
+        <animated.div styles={fabAnimProps}>
+          <Fab
+            aria-label="add contact button"
+            color="primary"
+            className={classes.fabButton}
+            onClick={handleClick}
+          >
+            <AddIcon />
+          </Fab>
+        </animated.div>
+      </animated.div>
     </Container>
   );
 }

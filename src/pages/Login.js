@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
+import { useSpring, animated } from 'react-spring';
 import { toast } from 'react-hot-toast';
 import { setCredentials } from '../redux/auth/authSlice';
 import { useLoginUserMutation } from '../redux/auth/authApi';
@@ -26,6 +27,14 @@ export default function Login() {
   const history = useHistory();
   const dispatch = useDispatch();
   const [loginUser, { isLoading }] = useLoginUserMutation();
+
+  const pagesAnimProps = useSpring({
+    from: {
+      opacity: 0,
+      transform: 'translate(-1000px, 0px)',
+    },
+    to: { opacity: 1, transform: 'translate(0px,0px)' },
+  });
 
   const handleSubmit = async e => {
     const email = e.currentTarget.email.value;
@@ -83,59 +92,61 @@ export default function Login() {
 
   return (
     <Container size="sm">
-      <Typography
-        variant="h6"
-        color="textSecondary"
-        component="h2"
-        gutterBottom
-      >
-        Login to your account:
-      </Typography>
+      <animated.div style={pagesAnimProps}>
+        <Typography
+          variant="h6"
+          color="textSecondary"
+          component="h2"
+          gutterBottom
+        >
+          Login to your account:
+        </Typography>
 
-      <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-        <TextField
-          className={classes.field}
-          label="Email"
-          name="email"
-          type="email"
-          variant="outlined"
-          color="secondary"
-          // fullWidth
-          required
-        />
-
-        <TextField
-          className={classes.field}
-          label="Password"
-          name="password"
-          type="password"
-          variant="outlined"
-          color="secondary"
-          // fullWidth
-          required
-        />
-
-        <MoveRightHover x={5} timing={200}>
-          <Button
-            type="submit"
-            disabled={isLoading}
+        <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+          <TextField
+            className={classes.field}
+            label="Email"
+            name="email"
+            type="email"
+            variant="outlined"
             color="secondary"
-            variant="contained"
-            endIcon={<KeyboardArrowRightIcon />}
-          >
-            {isLoading && (
-              <Loader
-                className="Loader"
-                type="ThreeDots"
-                color="blue"
-                height={20}
-                width={24}
-              />
-            )}
-            Log in
-          </Button>
-        </MoveRightHover>
-      </form>
+            // fullWidth
+            required
+          />
+
+          <TextField
+            className={classes.field}
+            label="Password"
+            name="password"
+            type="password"
+            variant="outlined"
+            color="secondary"
+            // fullWidth
+            required
+          />
+
+          <MoveRightHover x={5} timing={200}>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              color="secondary"
+              variant="contained"
+              endIcon={<KeyboardArrowRightIcon />}
+            >
+              {isLoading && (
+                <Loader
+                  className="Loader"
+                  type="ThreeDots"
+                  color="blue"
+                  height={20}
+                  width={24}
+                />
+              )}
+              Log in
+            </Button>
+          </MoveRightHover>
+        </form>
+      </animated.div>
     </Container>
   );
 }

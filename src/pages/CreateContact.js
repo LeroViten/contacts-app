@@ -3,6 +3,7 @@ import { toast } from 'react-hot-toast';
 import { makeStyles } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useSpring, animated } from 'react-spring';
 import { authSelectors } from '../redux/auth';
 import {
   useCreateContactMutation,
@@ -44,6 +45,14 @@ export default function CreateContact() {
   });
   const [createContact, { isLoading }] = useCreateContactMutation();
   const { data } = useFetchContactsQuery();
+
+  const pagesAnimProps = useSpring({
+    from: {
+      opacity: 0,
+      transform: 'translate(-1000px, 0px)',
+    },
+    to: { opacity: 1, transform: 'translate(0px,0px)' },
+  });
 
   /* eslint-disable no-useless-escape */
   /* prettier-ignore */
@@ -137,47 +146,48 @@ export default function CreateContact() {
 
   return (
     <Container size="sm">
-      <Typography
-        variant="h6"
-        color="textSecondary"
-        component="h2"
-        gutterBottom
-      >
-        Create a New Contact
-      </Typography>
+      <animated.div style={pagesAnimProps}>
+        <Typography
+          variant="h6"
+          color="textSecondary"
+          component="h2"
+          gutterBottom
+        >
+          Create a New Contact
+        </Typography>
 
-      <form autoComplete="off" onSubmit={handleSubmit}>
-        <TextField
-          className={classes.field}
-          label="Name"
-          name="name"
-          type="text"
-          variant="outlined"
-          color="secondary"
-          // fullWidth
-          required
-          helperText="The name can only consist of letters, apostrophe, dash and spaces. For example: Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-          inputProps={{
-            pattern:
-              "^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$",
-          }}
-        />
-        <TextField
-          className={classes.field}
-          label="Number"
-          name="number"
-          type="tel"
-          variant="outlined"
-          color="secondary"
-          // fullWidth
-          required
-          helperText="Phone number can consist of minimum 8 numbers, brackets, dashes, spaces and start with +"
-          inputProps={{
-            pattern: phoneRegEx,
-          }}
-        />
+        <form autoComplete="off" onSubmit={handleSubmit}>
+          <TextField
+            className={classes.field}
+            label="Name"
+            name="name"
+            type="text"
+            variant="outlined"
+            color="secondary"
+            // fullWidth
+            required
+            helperText="The name can only consist of letters, apostrophe, dash and spaces. For example: Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+            inputProps={{
+              pattern:
+                "^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$",
+            }}
+          />
+          <TextField
+            className={classes.field}
+            label="Number"
+            name="number"
+            type="tel"
+            variant="outlined"
+            color="secondary"
+            // fullWidth
+            required
+            helperText="Phone number can consist of minimum 8 numbers, brackets, dashes, spaces and start with +"
+            inputProps={{
+              pattern: phoneRegEx,
+            }}
+          />
 
-        {/* <FormControl className={classes.field}>
+          {/* <FormControl className={classes.field}>
           <FormLabel>Number Category</FormLabel>
           <RadioGroup
             value={category}
@@ -204,27 +214,28 @@ export default function CreateContact() {
           </RadioGroup>
         </FormControl> */}
 
-        <MoveRightHover x={5} timing={200}>
-          <Button
-            type="submit"
-            disabled={isLoading}
-            color="secondary"
-            variant="contained"
-            endIcon={<KeyboardArrowRightIcon />}
-          >
-            {isLoading && (
-              <Loader
-                className="Loader"
-                type="ThreeDots"
-                color="blue"
-                height={20}
-                width={24}
-              />
-            )}
-            Save
-          </Button>
-        </MoveRightHover>
-      </form>
+          <MoveRightHover x={5} timing={200}>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              color="secondary"
+              variant="contained"
+              endIcon={<KeyboardArrowRightIcon />}
+            >
+              {isLoading && (
+                <Loader
+                  className="Loader"
+                  type="ThreeDots"
+                  color="blue"
+                  height={20}
+                  width={24}
+                />
+              )}
+              Save
+            </Button>
+          </MoveRightHover>
+        </form>
+      </animated.div>
     </Container>
   );
 }

@@ -2,6 +2,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import { toast } from 'react-hot-toast';
+import { useSpring, animated } from '@react-spring/core';
 import { useCreateUserMutation } from '../redux/auth/authApi';
 import { setCredentials } from '../redux/auth/authSlice';
 import Typography from '@material-ui/core/Typography';
@@ -26,6 +27,14 @@ export default function Register() {
   const history = useHistory();
   const dispatch = useDispatch();
   const [createUser, { isLoading }] = useCreateUserMutation();
+
+  const pagesAnimProps = useSpring({
+    from: {
+      opacity: 0,
+      transform: 'translate(-1000px, 0px)',
+    },
+    to: { opacity: 1, transform: 'translate(0px,0px)' },
+  });
 
   const handleSubmit = async e => {
     const name = e.currentTarget.username.value;
@@ -96,69 +105,71 @@ export default function Register() {
 
   return (
     <Container size="sm">
-      <Typography
-        variant="h6"
-        color="textSecondary"
-        component="h2"
-        gutterBottom
-      >
-        Register in a form below:
-      </Typography>
+      <animated.div style={pagesAnimProps}>
+        <Typography
+          variant="h6"
+          color="textSecondary"
+          component="h2"
+          gutterBottom
+        >
+          Register in a form below:
+        </Typography>
 
-      <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-        <TextField
-          className={classes.field}
-          label="Name"
-          name="username"
-          type="text"
-          variant="outlined"
-          color="secondary"
-          // fullWidth
-          required
-        />
-        <TextField
-          className={classes.field}
-          label="Email"
-          name="email"
-          type="email"
-          variant="outlined"
-          color="secondary"
-          // fullWidth
-          required
-        />
-
-        <TextField
-          className={classes.field}
-          label="Password"
-          name="password"
-          type="password"
-          variant="outlined"
-          color="secondary"
-          // fullWidth
-          required
-        />
-
-        <MoveRightHover x={5} timing={200}>
-          <Button
-            type="submit"
-            disabled={isLoading}
+        <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+          <TextField
+            className={classes.field}
+            label="Name"
+            name="username"
+            type="text"
+            variant="outlined"
             color="secondary"
-            variant="contained"
-            endIcon={<KeyboardArrowRightIcon />}
-          >
-            {isLoading && (
-              <Loader
-                className="Loader"
-                type="ThreeDots"
-                color="blue"
-                height={20}
-                width={24}
-              />
-            )}
-            Register
-          </Button>
-        </MoveRightHover>
-      </form>
+            // fullWidth
+            required
+          />
+          <TextField
+            className={classes.field}
+            label="Email"
+            name="email"
+            type="email"
+            variant="outlined"
+            color="secondary"
+            // fullWidth
+            required
+          />
+
+          <TextField
+            className={classes.field}
+            label="Password"
+            name="password"
+            type="password"
+            variant="outlined"
+            color="secondary"
+            // fullWidth
+            required
+          />
+
+          <MoveRightHover x={5} timing={200}>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              color="secondary"
+              variant="contained"
+              endIcon={<KeyboardArrowRightIcon />}
+            >
+              {isLoading && (
+                <Loader
+                  className="Loader"
+                  type="ThreeDots"
+                  color="blue"
+                  height={20}
+                  width={24}
+                />
+              )}
+              Register
+            </Button>
+          </MoveRightHover>
+        </form>
+      </animated.div>
     </Container>
   );
 }

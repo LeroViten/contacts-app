@@ -11,10 +11,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { AddCircleOutlineOutlined, SubjectOutlined } from '@material-ui/icons/';
+import { SubjectOutlined } from '@material-ui/icons/';
 import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
-import AddBoxIcon from '@mui/icons-material/AddBox';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import AuthNav from './AuthNav';
@@ -77,19 +76,9 @@ export default function Layout({ children }) {
       path: '/contacts',
     },
     {
-      text: 'Create Contact',
-      icon: <AddBoxIcon color="primary" />,
-      path: '/create-contact',
-    },
-    {
       text: 'My Notes',
       icon: <SubjectOutlined color="secondary" />,
       path: '/notes',
-    },
-    {
-      text: 'Create Note',
-      icon: <AddCircleOutlineOutlined color="secondary" />,
-      path: '/create-note',
     },
     {
       text: 'Weather',
