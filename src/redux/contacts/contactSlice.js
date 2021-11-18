@@ -4,7 +4,7 @@ import axiosBaseQuery from '../../services/axiosBaseQuery';
 export const contactApi = createApi({
   reducerPath: 'contactApi',
   baseQuery: axiosBaseQuery({
-    baseUrl: 'https://connections-api.herokuapp.com', //https://connections-api.herokuapp.com
+    baseUrl: 'https://connections-api.herokuapp.com',
   }),
   tagTypes: ['Contact'],
   refetchOnMountOrArgChange: true,
@@ -29,6 +29,18 @@ export const contactApi = createApi({
         invalidatesTags: ['Contact'],
       }),
 
+      editContact: build.mutation({
+        query: updatedContact => ({
+          url: `/contacts/${updatedContact.id}`,
+          method: 'PATCH',
+          data: {
+            name: updatedContact.name,
+            number: updatedContact.number,
+          },
+        }),
+        invalidatesTags: ['Contact'],
+      }),
+
       deleteContact: build.mutation({
         query: contactID => ({
           url: `/contacts/${contactID}`,
@@ -44,6 +56,7 @@ export const {
   useFetchContactsQuery,
   useDeleteContactMutation,
   useCreateContactMutation,
+  useEditContactMutation,
 } = contactApi;
 
 //! fetchBaseQuery VARIANT!

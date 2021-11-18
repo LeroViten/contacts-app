@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { makeStyles } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { authSelectors } from '../redux/auth';
 import {
-  useCreateContactMutation,
+  useEditContactMutation,
   useFetchContactsQuery,
 } from '../redux/contacts/contactSlice';
 import { useFetchUserQuery } from '../redux/auth/authApi';
@@ -32,9 +33,12 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CreateContact() {
+export default function EditContact() {
   // const [category, setCategory] = useState('family');
   const [contacts, setContacts] = useState([]);
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const [editContact, { isLoading: updating }] = useEditContactMutation();
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -42,8 +46,9 @@ export default function CreateContact() {
   const { data: user } = useFetchUserQuery(token, {
     skip: token === null,
   });
-  const [createContact, { isLoading }] = useCreateContactMutation();
   const { data } = useFetchContactsQuery();
+  const { id } = useParams();
+  const editedContact = contacts.find(contact => contact.id.toString() === id);
 
   /* eslint-disable no-useless-escape */
   /* prettier-ignore */
@@ -67,13 +72,35 @@ export default function CreateContact() {
     })();
   }, [data]);
 
-  const handleSubmit = e => {
-    const name = e.currentTarget.name.value;
-    const number = e.currentTarget.number.value;
+  useEffect(() => {
+    if (editedContact) {
+      setName(editedContact.name);
+      setNumber(editedContact.number);
+    }
+  }, [editedContact, setName, setNumber]);
 
+  const handleChange = e => {
+    const { name, value } = e.target;
+
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+
+      case 'number':
+        setNumber(value);
+        break;
+
+      default:
+        return;
+    }
+  };
+
+  const handleSubmit = e => {
     e.preventDefault();
 
-    const newContact = {
+    const updatedContact = {
+      id,
       name,
       number,
     };
@@ -100,25 +127,8 @@ export default function CreateContact() {
       });
     }
 
-    if (
-      contacts.find(
-        contact => name.toLowerCase() === contact.name.toLowerCase()
-      )
-    ) {
-      toast.error('Contact is already in the list', {
-        duration: 3000,
-        icon: '🤷‍♂️',
-        style: {
-          border: '1px solid tomato',
-          color: '#b00b69',
-        },
-      });
-      e.currentTarget.reset();
-      return;
-    }
-
     if (name && number) {
-      createContact(newContact);
+      editContact(updatedContact);
 
       e.currentTarget.reset();
 
@@ -143,12 +153,14 @@ export default function CreateContact() {
         component="h2"
         gutterBottom
       >
-        Create a New Contact
+        Update a Contact
       </Typography>
 
       <form autoComplete="off" onSubmit={handleSubmit}>
         <TextField
           className={classes.field}
+          value={name}
+          onChange={handleChange}
           label="Name"
           name="name"
           type="text"
@@ -164,6 +176,8 @@ export default function CreateContact() {
         />
         <TextField
           className={classes.field}
+          value={number}
+          onChange={handleChange}
           label="Number"
           name="number"
           type="tel"
@@ -207,12 +221,12 @@ export default function CreateContact() {
         <MoveRightHover x={5} timing={200}>
           <Button
             type="submit"
-            disabled={isLoading}
+            disabled={updating}
             color="secondary"
             variant="contained"
             endIcon={<KeyboardArrowRightIcon />}
           >
-            {isLoading && (
+            {updating && (
               <Loader
                 className="Loader"
                 type="ThreeDots"
@@ -221,7 +235,7 @@ export default function CreateContact() {
                 width={24}
               />
             )}
-            Save
+            Update
           </Button>
         </MoveRightHover>
       </form>

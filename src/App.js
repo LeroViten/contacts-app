@@ -26,6 +26,9 @@ const Contacts = lazy(() =>
 const CreateContact = lazy(() =>
   import('./pages/CreateContact' /* webpackChunkName: "create-contact" */)
 );
+const EditContact = lazy(() =>
+  import('./pages/EditContact' /* webpackChunkName: "edit-contact" */)
+);
 const Notes = lazy(() =>
   import('./pages/Notes' /* webpackChunkName: "notes" */)
 );
@@ -101,6 +104,9 @@ function App() {
               </PrivateRoute>
               <PrivateRoute exact path="/create-contact">
                 <CreateContact />
+              </PrivateRoute>
+              <PrivateRoute exact path="/edit-contact/:id">
+                <EditContact />
               </PrivateRoute>
               <PrivateRoute exact path="/notes">
                 <Notes />
