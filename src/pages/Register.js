@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import { toast } from 'react-hot-toast';
-import { useSpring, animated } from '@react-spring/core';
+import { useSpring, animated } from 'react-spring';
 import { useCreateUserMutation } from '../redux/auth/authApi';
 import { setCredentials } from '../redux/auth/authSlice';
 import Typography from '@material-ui/core/Typography';
